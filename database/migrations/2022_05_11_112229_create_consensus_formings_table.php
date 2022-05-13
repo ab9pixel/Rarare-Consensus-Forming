@@ -28,7 +28,7 @@ class CreateConsensusFormingsTable extends Migration
             $table->longText("end_time")->nullable();
             $table->longText("participation")->nullable();
             $table->integer("status")->default("0");
-            $table->longText("user_id")->nullable();
+            $table->integer("user_id")->nullable();
             $table->timestamps();
         });
     }

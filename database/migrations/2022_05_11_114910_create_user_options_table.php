@@ -15,9 +15,9 @@ class CreateUserOptionsTable extends Migration
     {
         Schema::create('user_options', function (Blueprint $table) {
             $table->id();
-            $table->longText("user_id")->nullable();
-            $table->longText("option_id")->nullable();
-            $table->longText("parent_id")->nullable();
+            $table->integer("user_id")->nullable();
+            $table->integer("option_id")->nullable();
+            $table->integer("parent_id")->nullable();
             $table->timestamps();
         });
     }

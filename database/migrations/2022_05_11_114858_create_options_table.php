@@ -17,7 +17,7 @@ class CreateOptionsTable extends Migration
             $table->id();
             $table->longText("vote_option")->nullable();
             $table->longText("vote_description")->nullable();
-            $table->longText("parent_id")->nullable();
+            $table->integer("parent_id")->nullable();
             $table->timestamps();
         });
     }
