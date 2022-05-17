@@ -13,9 +13,14 @@ use Illuminate\Support\Facades\Validator;
 class ConsensusFormingController extends Controller
 {
 
-    public function list()
+    public function list($count,$user_id=null)
     {
-        $consensus_forming = ConsensusForming::withCount('comments', 'likes')->with('comments', 'options')->get();
+        if(is_null($user_id)){
+            $consensus_forming = ConsensusForming::withCount('comments', 'likes')->with('comments', 'options')->limit($count)->get();
+        }
+        else{
+            $consensus_forming = ConsensusForming::withCount('comments', 'likes')->with('comments', 'options')->where('user_id',$user_id)->limit($count)->get();
+        }
         return response()->json($consensus_forming);
     }
 
