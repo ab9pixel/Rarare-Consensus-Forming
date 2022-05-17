@@ -88,11 +88,20 @@ class ConsensusFormingController extends Controller
 
     public function comment(Request $request)
     {
-        $this->validate($request->all(), [
+        $validator = Validator::make($request->all(), [
             'user_id' => 'required',
             'comment' => 'required',
             'parent_id' => 'required',
         ]);
+
+        if ($validator->fails()) {
+            $messages = $validator->messages()->all();
+
+            return response()->json([
+                'status' => 'Error',
+                'message' => $messages[0],
+            ], 200);
+        }
 
         $comment = new Comment;
         $comment->user_id = $request->user_id;
@@ -105,10 +114,20 @@ class ConsensusFormingController extends Controller
 
     public function like(Request $request)
     {
-        $this->validate($request->all(), [
+        $validator = Validator::make($request->all(), [
             'user_id' => 'required',
             'parent_id' => 'required',
         ]);
+
+        if ($validator->fails()) {
+            $messages = $validator->messages()->all();
+
+            return response()->json([
+                'status' => 'Error',
+                'message' => $messages[0],
+            ], 200);
+        }
+
         $liked=Like::where(['user_id'=>$request->user_id,'parent_id'=>$request->parent_id])->first();
         if(!is_null($liked)){
             $liked->delete();
