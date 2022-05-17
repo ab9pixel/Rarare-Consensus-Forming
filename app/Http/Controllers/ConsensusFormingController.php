@@ -148,20 +148,20 @@ class ConsensusFormingController extends Controller
 
     public function user_option(Request $request)
     {
-        // $validator = Validator::make($request->all(), [
-        //     'user_id' => 'required',
-        //     'parent_id' => 'required',
-        //     'option_id' => 'required',
-        // ]);
+        $validator = Validator::make($request->all(), [
+            'user_id' => 'required',
+            'parent_id' => 'required',
+            'option_id' => 'required',
+        ]);
 
-        // if ($validator->fails()) {
-        //     $messages = $validator->messages()->all();
+        if ($validator->fails()) {
+            $messages = $validator->messages()->all();
 
-        //     return response()->json([
-        //         'status' => 'Error',
-        //         'message' => $messages[0],
-        //     ], 200);
-        // }
+            return response()->json([
+                'status' => 'Error',
+                'message' => $messages[0],
+            ], 200);
+        }
 
         $user_option = new UserOption;
         $user_option->user_id = $request->user_id;
@@ -169,7 +169,13 @@ class ConsensusFormingController extends Controller
         $user_option->option_id = $request->option_id;
         $user_option->save();
 
-        return response()->json($user_option);
+        $option_array=array();
+        $option=Option::where(['parent_id'=>$request->parent_id])->get();
+        foreach($option as $item){
+            $option_array[$item->id]=count(UserOption::where(['option_id'=>$item->id])->get());
+        }
+
+        return response()->json($option_array);
     }
 
     public function delete($id)
