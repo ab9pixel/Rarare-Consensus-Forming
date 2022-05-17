@@ -109,7 +109,8 @@ class ConsensusFormingController extends Controller
         $comment->comment = $request->comment;
         $comment->save();
 
-        return response()->json($comment);
+        $comments= Comment::with('user')->where('parent_id', $request->parent_id)->get();
+        return response()->json($comments);
     }
 
     public function like(Request $request)
