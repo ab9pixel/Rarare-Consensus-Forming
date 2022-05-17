@@ -139,25 +139,27 @@ class ConsensusFormingController extends Controller
         $like->parent_id = $request->parent_id;
         $like->save();
 
-        return response()->json($like);
+        $likes=Like::where(['parent_id'=>$request->parent_id])->count();
+
+        return response()->json($likes);
     }
 
     public function user_option(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'user_id' => 'required',
-            'parent_id' => 'required',
-            'option_id' => 'required',
-        ]);
+        // $validator = Validator::make($request->all(), [
+        //     'user_id' => 'required',
+        //     'parent_id' => 'required',
+        //     'option_id' => 'required',
+        // ]);
 
-        if ($validator->fails()) {
-            $messages = $validator->messages()->all();
+        // if ($validator->fails()) {
+        //     $messages = $validator->messages()->all();
 
-            return response()->json([
-                'status' => 'Error',
-                'message' => $messages[0],
-            ], 200);
-        }
+        //     return response()->json([
+        //         'status' => 'Error',
+        //         'message' => $messages[0],
+        //     ], 200);
+        // }
 
         $user_option = new UserOption;
         $user_option->user_id = $request->user_id;
