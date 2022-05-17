@@ -46,7 +46,6 @@ class ConsensusForming extends Model
     public function getUserAttribute()
     {
         $user_id=$this->first()->user_id;
-        dd($user_id);
         $curl = curl_init();
 
         curl_setopt_array($curl, array(

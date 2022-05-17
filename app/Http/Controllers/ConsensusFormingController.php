@@ -125,11 +125,20 @@ class ConsensusFormingController extends Controller
 
     public function user_option(Request $request)
     {
-        $this->validate($request, [
+        $validator = Validator::make($request, [
             'user_id' => 'required',
             'parent_id' => 'required',
             'option_id' => 'required',
         ]);
+
+        if ($validator->fails()) {
+            $messages = $validator->messages()->all();
+
+            return response()->json([
+                'status' => 'Error',
+                'message' => $messages[0],
+            ], 200);
+        }
 
         $user_option = new UserOption;
         $user_option->user_id = $request->user_id;
