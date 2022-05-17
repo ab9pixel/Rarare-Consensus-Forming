@@ -34,7 +34,7 @@ class ConsensusFormingController extends Controller
             'end_time' => 'required',
             'user_id' => 'required',
             'participation' => 'required',
-            'vote_question'=> 'required',
+            'vote_question' => 'required',
         ]);
         if ($validator->fails()) {
             $messages = $validator->messages()->all();
@@ -45,10 +45,9 @@ class ConsensusFormingController extends Controller
             ], 200);
         }
 
-        if(isset($request->id)){
+        if (isset($request->id)) {
             $consensus_forming = ConsensusForming::find($request->id);
-        }
-        else{
+        } else {
             $consensus_forming = new ConsensusForming;
         }
 
@@ -66,7 +65,7 @@ class ConsensusFormingController extends Controller
         $consensus_forming->vote_question = $request->vote_question;
         $consensus_forming->user_id = $request->user_id;
         if ($consensus_forming->save()) {
-            if(!isset($request->id)){
+            if (!isset($request->id)) {
                 foreach ($request->vote_option as $key => $vote_option) {
                     $option = new Option;
                     $option->parent_id = $consensus_forming->id;
@@ -109,7 +108,7 @@ class ConsensusFormingController extends Controller
         $comment->comment = $request->comment;
         $comment->save();
 
-        $comments= Comment::where('parent_id', $request->parent_id)->get();
+        $comments = Comment::where('parent_id', $request->parent_id)->get();
         return response()->json($comments);
     }
 
@@ -129,18 +128,20 @@ class ConsensusFormingController extends Controller
             ], 200);
         }
 
-        $liked=Like::where(['user_id'=>$request->user_id,'parent_id'=>$request->parent_id])->first();
-        if(!is_null($liked)){
+        $liked = Like::where(['user_id' => $request->user_id, 'parent_id' => $request->parent_id])->first();
+        if (!is_null($liked)) {
             $liked->delete();
-            return response()->json(['message'=>'Disliked']);
+            $likes = Like::where(['parent_id' => $request->parent_id])->count();
+
+            return response()->json($likes);
         }
-        
+
         $like = new Like;
         $like->user_id = $request->user_id;
         $like->parent_id = $request->parent_id;
         $like->save();
 
-        $likes=Like::where(['parent_id'=>$request->parent_id])->count();
+        $likes = Like::where(['parent_id' => $request->parent_id])->count();
 
         return response()->json($likes);
     }
@@ -173,14 +174,14 @@ class ConsensusFormingController extends Controller
 
     public function delete($id)
     {
-        $consensus_forming = ConsensusForming::with('comments', 'options','likes','user_option')->find($id);
-        if(!is_null($consensus_forming)){
+        $consensus_forming = ConsensusForming::with('comments', 'options', 'likes', 'user_option')->find($id);
+        if (!is_null($consensus_forming)) {
             $consensus_forming->comments()->delete();
             $consensus_forming->user_option()->delete();
             $consensus_forming->likes()->delete();
             $consensus_forming->options()->delete();
             $consensus_forming->delete();
         }
-        return response()->json(['message'=>'Deleted']);
+        return response()->json(['message' => 'Deleted']);
     }
 }
