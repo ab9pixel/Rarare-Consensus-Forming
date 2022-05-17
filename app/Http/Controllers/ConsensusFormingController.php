@@ -8,6 +8,7 @@ use App\Models\Like;
 use App\Models\Option;
 use App\Models\UserOption;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class ConsensusFormingController extends Controller
 {
@@ -20,7 +21,7 @@ class ConsensusFormingController extends Controller
 
     public function save(Request $request)
     {
-        $this->validate($request, [
+        $validator = Validator::make($request, [
             'title' => 'required|max:255',
             'description' => 'required',
             'address' => 'required',
@@ -35,6 +36,14 @@ class ConsensusFormingController extends Controller
             'participation' => 'required',
             'vote_question'=> 'required',
         ]);
+        if ($validator->fails()) {
+            $messages = $validator->messages()->all();
+
+            return response()->json([
+                'status' => 'Error',
+                'message' => $messages[0],
+            ], 200);
+        }
 
         if(isset($request->id)){
             $consensus_forming = ConsensusForming::find($request->id);
