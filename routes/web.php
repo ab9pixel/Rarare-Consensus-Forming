@@ -19,7 +19,7 @@ $router->get('/', function () use ($router) {
 
 
 $router->group(['prefix'=>'api'],function() use ($router){
-    $router->get('/{count}/{user_id?}','ConsensusFormingController@list');
+    $router->get('/{count}/{user_id}','ConsensusFormingController@list');
     $router->get('find/{id}','ConsensusFormingController@find');
     $router->get('delete/{id}','ConsensusFormingController@delete');
 
