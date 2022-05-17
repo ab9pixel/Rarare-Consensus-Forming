@@ -21,7 +21,7 @@ class ConsensusFormingController extends Controller
 
     public function save(Request $request)
     {
-        $validator = Validator::make($request, [
+        $validator = Validator::make($request->all(), [
             'title' => 'required|max:255',
             'description' => 'required',
             'address' => 'required',
@@ -88,7 +88,7 @@ class ConsensusFormingController extends Controller
 
     public function comment(Request $request)
     {
-        $this->validate($request, [
+        $this->validate($request->all(), [
             'user_id' => 'required',
             'comment' => 'required',
             'parent_id' => 'required',
@@ -105,7 +105,7 @@ class ConsensusFormingController extends Controller
 
     public function like(Request $request)
     {
-        $this->validate($request, [
+        $this->validate($request->all(), [
             'user_id' => 'required',
             'parent_id' => 'required',
         ]);
@@ -125,7 +125,7 @@ class ConsensusFormingController extends Controller
 
     public function user_option(Request $request)
     {
-        $validator = Validator::make($request, [
+        $validator = Validator::make($request->all(), [
             'user_id' => 'required',
             'parent_id' => 'required',
             'option_id' => 'required',
