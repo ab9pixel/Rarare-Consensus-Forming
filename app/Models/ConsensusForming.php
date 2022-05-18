@@ -11,7 +11,7 @@ class ConsensusForming extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    protected $appends = ['liked_users','user','exist_users','marked_option'];
+    protected $appends = ['liked_users','user','exist_users','marked_option','type'];
 
     public function comments()
     {
@@ -41,6 +41,11 @@ class ConsensusForming extends Model
     public function getExistUsersAttribute()
     {
         return $this->user_option->pluck('user_id');
+    }
+
+    public function getTypeAttribute()
+    {
+        return "consensus_forming";
     }
 
     public function getUserAttribute()
