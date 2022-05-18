@@ -21,7 +21,10 @@ class ConsensusFormingController extends Controller
         else{
             $consensus_forming = ConsensusForming::withCount('comments', 'likes')->with('comments', 'options')->where('user_id',$user_id)->limit($count)->get();
         }
-        return response()->json($consensus_forming);
+        return response()->json([
+            'type' => 'consensus_forming',
+            'data' => $consensus_forming,
+        ], 200);
     }
 
     public function save(Request $request)
