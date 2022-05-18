@@ -173,9 +173,17 @@ class ConsensusFormingController extends Controller
         $user_option->parent_id = $request->parent_id;
         $user_option->option_id = $request->option_id;
         $user_option->save();
-
+        
+        $consensus_forming=ConsensusForming::find($request->parent_id);
+        
         $option_array=array();
         $option=Option::where(['parent_id'=>$request->parent_id])->get();
+        
+        if($consensus_forming->audience<=count($option)){
+            $consensus_forming->status=1;
+            $consensus_forming->save();
+        }
+        
         foreach($option as $item){
             $option_array[$item->id]=count(UserOption::where(['option_id'=>$item->id])->get());
         }
