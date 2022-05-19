@@ -37,8 +37,8 @@ class ConsensusForming extends Model
     {
         $user_option=count($this->user_option()->get());
         $audience=$this->audience;
-        dd($user_option,$audience);
-        return 80;
+        $percentage=round(($user_option/$audience)*100);
+        return $percentage;
     }
 
     public function getLikedUsersAttribute()
