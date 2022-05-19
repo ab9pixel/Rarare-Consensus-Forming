@@ -11,7 +11,7 @@ class ConsensusForming extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    protected $appends = ['liked_users','user','exist_users','marked_option','type'];
+    protected $appends = ['liked_users','user','exist_users','marked_option','type','progress'];
 
     public function comments()
     {
@@ -31,6 +31,13 @@ class ConsensusForming extends Model
     public function user_option()
     {
         return $this->hasMany(UserOption::class, 'parent_id', 'id');
+    }
+
+    public function getProgressAttribute()
+    {
+        $user_option=count($this->user_option()->get());
+        $audience=$this->audience;
+        return 80;
     }
 
     public function getLikedUsersAttribute()
