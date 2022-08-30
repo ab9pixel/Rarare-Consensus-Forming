@@ -13,15 +13,14 @@ use Illuminate\Support\Facades\Validator;
 class ConsensusFormingController extends Controller
 {
 
-    public function list($count,$user_id)
+    public function list($count, $user_id)
     {
-        if($user_id==0){
+        if ($user_id == 0) {
             $consensus_forming = ConsensusForming::withCount('comments', 'likes')->with('comments', 'options')->limit($count)->get();
+        } else {
+            $consensus_forming = ConsensusForming::withCount('comments', 'likes')->with('comments', 'options')->where('user_id', $user_id)->limit($count)->get();
         }
-        else{
-            $consensus_forming = ConsensusForming::withCount('comments', 'likes')->with('comments', 'options')->where('user_id',$user_id)->limit($count)->get();
-        }
-        
+
         return response()->json($consensus_forming);
     }
 
@@ -115,6 +114,19 @@ class ConsensusFormingController extends Controller
         $comment->save();
 
         $comments = Comment::where('parent_id', $request->parent_id)->get();
+        $consensus_forming = ConsensusForming::find($request->parent_id);
+
+        if ($consensus_forming->participation == 1) {
+            $post['user_id'] = $request->user_id;
+            $post['action'] = "Commented";
+            $post['type'] = "Consensus Forming";
+            $post['vote_question'] = $consensus_forming->vote_question;
+            $post['message'] = $consensus_forming->description;
+            $post['url'] = "google.com";
+            $post['title'] = $consensus_forming->title;
+
+            $this->send_notification($post);
+        }
         return response()->json($comments);
     }
 
@@ -148,7 +160,19 @@ class ConsensusFormingController extends Controller
         $like->save();
 
         $likes = Like::where(['parent_id' => $request->parent_id])->count();
+        $consensus_forming = ConsensusForming::find($request->parent_id);
 
+        if ($consensus_forming->participation == 1) {
+            $post['user_id'] = $request->user_id;
+            $post['action'] = "Liked";
+            $post['type'] = "Consensus Forming";
+            $post['vote_question'] = $consensus_forming->vote_question;
+            $post['message'] = $consensus_forming->description;
+            $post['url'] = "google.com";
+            $post['title'] = $consensus_forming->title;
+
+            $this->send_notification($post);
+        }
         return response()->json($likes);
     }
 
@@ -174,19 +198,32 @@ class ConsensusFormingController extends Controller
         $user_option->parent_id = $request->parent_id;
         $user_option->option_id = $request->option_id;
         $user_option->save();
-        
-        $consensus_forming=ConsensusForming::find($request->parent_id);
-        
-        $option_array=array();
-        $option=Option::where(['parent_id'=>$request->parent_id])->get();
-        
-        if($consensus_forming->audience<=count($option)){
-            $consensus_forming->status=1;
+
+        $consensus_forming = ConsensusForming::find($request->parent_id);
+
+        $option_array = array();
+        $option = Option::where(['parent_id' => $request->parent_id])->get();
+
+        if ($consensus_forming->audience <= count($option)) {
+            $consensus_forming->status = 1;
             $consensus_forming->save();
         }
-        
-        foreach($option as $item){
-            $option_array[$item->id]=count(UserOption::where(['option_id'=>$item->id])->get());
+
+        foreach ($option as $item) {
+            $option_array[$item->id] = count(UserOption::where(['option_id' => $item->id])->get());
+        }
+
+        $consensus_forming = ConsensusForming::find($request->parent_id);
+        if ($consensus_forming->participation == 1) {
+            $post['user_id'] = $request->user_id;
+            $post['action'] = "Voted";
+            $post['type'] = "Consensus Forming";
+            $post['vote_question'] = $consensus_forming->vote_question;
+            $post['message'] = $consensus_forming->description;
+            $post['url'] = "google.com";
+            $post['title'] = $consensus_forming->title;
+
+            $this->send_notification($post);
         }
 
         return response()->json($option_array);
@@ -203,5 +240,36 @@ class ConsensusFormingController extends Controller
             $consensus_forming->delete();
         }
         return response()->json(['message' => 'Deleted']);
+    }
+
+    public function send_notification($post)
+    {
+        $curl = curl_init();
+
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => 'https://rrci.staging.rarare.com/proposal/subscribe/email',
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'POST',
+            CURLOPT_POSTFIELDS => array(
+                'title' => $post['title'],
+                'type' => $post['type'],
+                'vote_question' => $post['vote_question'],
+                'message' => $post['message'],
+                'action' => $post['action'],
+                'url' => $post['url'],
+                'user_id' => $post['user_id']
+            ),
+        ));
+
+        $response = curl_exec($curl);
+
+        curl_close($curl);
+
+        return true;
     }
 }
