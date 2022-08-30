@@ -122,7 +122,7 @@ class ConsensusFormingController extends Controller
             $post['type'] = "Consensus Forming";
             $post['vote_question'] = $consensus_forming->vote_question;
             $post['message'] = $consensus_forming->description;
-            $post['url'] = "google.com";
+            $post['url'] = "https://staging.rarare.com/proposal?id=".$request->parent_id;
             $post['title'] = $consensus_forming->title;
 
             $this->send_notification($post);
@@ -168,7 +168,7 @@ class ConsensusFormingController extends Controller
             $post['type'] = "Consensus Forming";
             $post['vote_question'] = $consensus_forming->vote_question;
             $post['message'] = $consensus_forming->description;
-            $post['url'] = "google.com";
+            $post['url'] = "https://staging.rarare.com/proposal?id=".$request->parent_id;
             $post['title'] = $consensus_forming->title;
 
             $this->send_notification($post);
@@ -220,7 +220,7 @@ class ConsensusFormingController extends Controller
             $post['type'] = "Consensus Forming";
             $post['vote_question'] = $consensus_forming->vote_question;
             $post['message'] = $consensus_forming->description;
-            $post['url'] = "google.com";
+            $post['url'] = "https://staging.rarare.com/proposal?id=".$request->parent_id;
             $post['title'] = $consensus_forming->title;
 
             $this->send_notification($post);
