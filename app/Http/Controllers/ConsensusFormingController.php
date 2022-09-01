@@ -122,9 +122,9 @@ class ConsensusFormingController extends Controller
             $post['type'] = "Consensus Forming";
             $post['vote_question'] = $consensus_forming->vote_question;
             $post['message'] = $consensus_forming->description;
-            $post['url'] = "https://staging.rarare.com/proposal?id=".$request->parent_id;
+            $post['url'] = "https://staging.rarare.com/proposal?id=" . $request->parent_id;
             $post['title'] = $consensus_forming->title;
-
+            $post['sender_id'] = $request->user_id;
             $this->send_notification($post);
         }
         return response()->json($comments);
@@ -168,9 +168,9 @@ class ConsensusFormingController extends Controller
             $post['type'] = "Consensus Forming";
             $post['vote_question'] = $consensus_forming->vote_question;
             $post['message'] = $consensus_forming->description;
-            $post['url'] = "https://staging.rarare.com/proposal?id=".$request->parent_id;
+            $post['url'] = "https://staging.rarare.com/proposal?id=" . $request->parent_id;
             $post['title'] = $consensus_forming->title;
-
+            $post['sender_id'] = $request->user_id;
             $this->send_notification($post);
         }
         return response()->json($likes);
@@ -220,9 +220,9 @@ class ConsensusFormingController extends Controller
             $post['type'] = "Consensus Forming";
             $post['vote_question'] = $consensus_forming->vote_question;
             $post['message'] = $consensus_forming->description;
-            $post['url'] = "https://staging.rarare.com/proposal?id=".$request->parent_id;
+            $post['url'] = "https://staging.rarare.com/proposal?id=" . $request->parent_id;
             $post['title'] = $consensus_forming->title;
-
+            $post['sender_id'] = $request->user_id;
             $this->send_notification($post);
         }
 
@@ -262,7 +262,8 @@ class ConsensusFormingController extends Controller
                 'message' => $post['message'],
                 'action' => $post['action'],
                 'url' => $post['url'],
-                'user_id' => $post['user_id']
+                'user_id' => $post['user_id'],
+                'sender_id' => $post['sender_id']
             ),
         ));
 
