@@ -15,10 +15,19 @@ class ConsensusFormingController extends Controller
 
     public function list($count, $user_id)
     {
-        if ($user_id == 0) {
-            $consensus_forming = ConsensusForming::withCount('comments', 'likes')->with('comments', 'options')->limit($count)->get();
-        } else {
-            $consensus_forming = ConsensusForming::withCount('comments', 'likes')->with('comments', 'options')->where('user_id', $user_id)->limit($count)->get();
+        if ($count != 0) {
+            if ($user_id == 0) {
+                $consensus_forming = ConsensusForming::withCount('comments', 'likes')->with('comments', 'options')->limit($count)->get();
+            } else {
+                $consensus_forming = ConsensusForming::withCount('comments', 'likes')->with('comments', 'options')->where('user_id', $user_id)->limit($count)->get();
+            }
+        }
+        else{
+            if ($user_id == 0) {
+                $consensus_forming = ConsensusForming::withCount('comments', 'likes')->with('comments', 'options')->get();
+            } else {
+                $consensus_forming = ConsensusForming::withCount('comments', 'likes')->with('comments', 'options')->where('user_id', $user_id)->get();
+            }
         }
 
         return response()->json($consensus_forming);
