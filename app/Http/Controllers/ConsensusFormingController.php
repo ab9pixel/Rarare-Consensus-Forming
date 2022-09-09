@@ -13,25 +13,53 @@ use Illuminate\Support\Facades\Validator;
 class ConsensusFormingController extends Controller
 {
 
-    public function list($count, $user_id)
-    {
-        if ($count != 0) {
-            if ($user_id == 0) {
-                $consensus_forming = ConsensusForming::withCount('comments', 'likes')->with('comments', 'options')->orderBy('id','desc')->limit($count)->get();
-            } else {
-                $consensus_forming = ConsensusForming::withCount('comments', 'likes')->with('comments', 'options')->where('user_id', $user_id)->orderBy('id','desc')->limit($count)->get();
-            }
-        }
-        else{
-            if ($user_id == 0) {
-                $consensus_forming = ConsensusForming::withCount('comments', 'likes')->with('comments', 'options')-orderBy('id','desc')->get();
-            } else {
-                $consensus_forming = ConsensusForming::withCount('comments', 'likes')->with('comments', 'options')->where('user_id', $user_id)->orderBy('id','desc')->get();
-            }
-        }
+    public function list( $count, $user_id )
+	{
+		if ( $count != 0 ) {
+			if ( $user_id == 0 ) {
+				$consensus_forming = ConsensusForming::withCount( 'comments', 'likes' )->with( 'comments', 'options' )->orderBy( 'id', 'desc' )->limit( $count )->get();
+			} else {
 
-        return response()->json($consensus_forming);
-    }
+				$consensus_forming = ConsensusForming::withCount( 'comments', 'likes' )->with( 'comments', 'options' )->where( 'user_id', $user_id )->orderBy( 'id', 'desc' )->limit( $count )->get();
+			}
+		} else {
+			if ( $user_id == 0 ) {
+				$consensus_forming = ConsensusForming::withCount( 'comments', 'likes' )->with( 'comments', 'options' ) - orderBy( 'id', 'desc' )->get();
+			} else {
+
+				$consensus_forming = ConsensusForming::withCount( 'comments', 'likes' )->with( 'comments', 'options' )->where( 'user_id', $user_id )->orderBy( 'id', 'desc' )->get();
+			}
+		}
+
+		if ( $user_id != 0 ) {
+			$user = $this->get_user( $user_id );
+
+			if(!is_null($user->latitude)) {
+
+				foreach ( $consensus_forming as $key => $farming ) {
+					$source = [
+						'lat' => $farming->latitude,
+						'lng' => $farming->longitude
+					];
+
+					$destination = [
+						'lat' => $user->latitude,
+						'lng' => $user->longitude
+					];
+
+					$mile = $this->calculate_distance( $source, $destination );
+					
+					if ( $mile > 30 ) {
+						unset( $consensus_forming[ $key ] );
+					}
+				}
+			}
+		}
+
+
+
+		return response()->json( $consensus_forming );
+	}
 
     public function save(Request $request)
     {
