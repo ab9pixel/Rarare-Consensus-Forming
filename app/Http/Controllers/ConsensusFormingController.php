@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Validator;
 class ConsensusFormingController extends Controller
 {
 
-    public function list($count, $user_id,$type)
+    public function list($count, $user_id, $type)
     {
         if ($count != 0) {
             if ($type == "l") {
@@ -23,12 +23,12 @@ class ConsensusFormingController extends Controller
             }
         } else {
             if ($type == "l") {
-                $consensus_forming = ConsensusForming::withCount('comments', 'likes')->with('comments', 'options') - orderBy('created_at', 'desc')->get();
+                $consensus_forming = ConsensusForming::withCount('comments', 'likes')->with('comments', 'options')->orderBy('created_at', 'desc')->get();
             } else {
                 $consensus_forming = ConsensusForming::withCount('comments', 'likes')->with('comments', 'options')->where('user_id', $user_id)->orderBy('created_at', 'desc')->get();
             }
         }
-		$data=[];
+        $data = [];
         if ($type == "l") {
             $user = $this->get_user($user_id);
             if (!is_null($user->latitude)) {
@@ -46,16 +46,14 @@ class ConsensusFormingController extends Controller
                     $mile = $this->calculate_distance($source, $destination);
 
                     if ($mile > 30) {
-	                    $consensus_forming->forget($key);
-                    }
-                    else{
-                    	array_push($data,$forming);
+                        $consensus_forming->forget($key);
+                    } else {
+                        array_push($data, $forming);
                     }
                 }
             }
-        }
-        else{
-        	$data=$consensus_forming;
+        } else {
+            $data = $consensus_forming;
         }
 
         return response()->json($data);
@@ -346,5 +344,4 @@ class ConsensusFormingController extends Controller
 
         return $miles;
     }
-
 }
