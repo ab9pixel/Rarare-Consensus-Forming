@@ -30,16 +30,16 @@ class ConsensusFormingController extends Controller
                 $consensus_forming = ConsensusForming::withCount('comments', 'likes')->with('comments', 'options')->where('user_id', $user_id)->orderBy('id', 'desc')->get();
             }
         }
-
+		$data=[];
         if ($user_id != 0) {
             $user = $this->get_user($user_id);
 
             if (!is_null($user->latitude)) {
 
-                foreach ($consensus_forming as $key => $farming) {
+                foreach ($consensus_forming as $key => $forming) {
                     $source = [
-                        'lat' => $farming->latitude,
-                        'lng' => $farming->longitude
+                        'lat' => $forming->latitude,
+                        'lng' => $forming->longitude
                     ];
 
                     $destination = [
@@ -50,15 +50,21 @@ class ConsensusFormingController extends Controller
                     $mile = $this->calculate_distance($source, $destination);
 
                     if ($mile > 30) {
-                        unset($consensus_forming[$key]);
+	                    $consensus_forming->forget($key);
+                    }
+                    else{
+                    	array_push($data,$forming);
                     }
                 }
             }
         }
+        else{
+        	$data=$consensus_forming;
+        }
 
 
 
-        return response()->json($consensus_forming);
+        return response()->json($data);
     }
 
     public function save(Request $request)
