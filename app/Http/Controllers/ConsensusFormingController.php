@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Validator;
 class ConsensusFormingController extends Controller
 {
 
-    public function list($count, $user_id,$type="l")
+    public function list($count, $user_id,$type)
     {
         if ($count != 0) {
             if ($type == "l") {
