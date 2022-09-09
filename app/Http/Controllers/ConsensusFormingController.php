@@ -13,29 +13,25 @@ use Illuminate\Support\Facades\Validator;
 class ConsensusFormingController extends Controller
 {
 
-    public function list($count, $user_id)
+    public function list($count, $user_id,$type="l")
     {
         if ($count != 0) {
-            if ($user_id == 0) {
-                $consensus_forming = ConsensusForming::withCount('comments', 'likes')->with('comments', 'options')->orderBy('id', 'desc')->limit($count)->get();
+            if ($type == "l") {
+                $consensus_forming = ConsensusForming::withCount('comments', 'likes')->with('comments', 'options')->orderBy('created_at', 'desc')->limit($count)->get();
             } else {
-
-                $consensus_forming = ConsensusForming::withCount('comments', 'likes')->with('comments', 'options')->where('user_id', $user_id)->orderBy('id', 'desc')->limit($count)->get();
+                $consensus_forming = ConsensusForming::withCount('comments', 'likes')->with('comments', 'options')->where('user_id', $user_id)->orderBy('created_at', 'desc')->limit($count)->get();
             }
         } else {
-            if ($user_id == 0) {
-                $consensus_forming = ConsensusForming::withCount('comments', 'likes')->with('comments', 'options') - orderBy('id', 'desc')->get();
+            if ($type == "l") {
+                $consensus_forming = ConsensusForming::withCount('comments', 'likes')->with('comments', 'options') - orderBy('created_at', 'desc')->get();
             } else {
-
-                $consensus_forming = ConsensusForming::withCount('comments', 'likes')->with('comments', 'options')->where('user_id', $user_id)->orderBy('id', 'desc')->get();
+                $consensus_forming = ConsensusForming::withCount('comments', 'likes')->with('comments', 'options')->where('user_id', $user_id)->orderBy('created_at', 'desc')->get();
             }
         }
 		$data=[];
-        if ($user_id != 0) {
+        if ($type == "l") {
             $user = $this->get_user($user_id);
-
             if (!is_null($user->latitude)) {
-
                 foreach ($consensus_forming as $key => $forming) {
                     $source = [
                         'lat' => $forming->latitude,
@@ -61,8 +57,6 @@ class ConsensusFormingController extends Controller
         else{
         	$data=$consensus_forming;
         }
-
-
 
         return response()->json($data);
     }
