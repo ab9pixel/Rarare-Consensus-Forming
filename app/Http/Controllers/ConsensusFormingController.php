@@ -13,53 +13,53 @@ use Illuminate\Support\Facades\Validator;
 class ConsensusFormingController extends Controller
 {
 
-    public function list( $count, $user_id )
-	{
-		if ( $count != 0 ) {
-			if ( $user_id == 0 ) {
-				$consensus_forming = ConsensusForming::withCount( 'comments', 'likes' )->with( 'comments', 'options' )->orderBy( 'id', 'desc' )->limit( $count )->get();
-			} else {
+    public function list($count, $user_id)
+    {
+        if ($count != 0) {
+            if ($user_id == 0) {
+                $consensus_forming = ConsensusForming::withCount('comments', 'likes')->with('comments', 'options')->orderBy('id', 'desc')->limit($count)->get();
+            } else {
 
-				$consensus_forming = ConsensusForming::withCount( 'comments', 'likes' )->with( 'comments', 'options' )->where( 'user_id', $user_id )->orderBy( 'id', 'desc' )->limit( $count )->get();
-			}
-		} else {
-			if ( $user_id == 0 ) {
-				$consensus_forming = ConsensusForming::withCount( 'comments', 'likes' )->with( 'comments', 'options' ) - orderBy( 'id', 'desc' )->get();
-			} else {
+                $consensus_forming = ConsensusForming::withCount('comments', 'likes')->with('comments', 'options')->where('user_id', $user_id)->orderBy('id', 'desc')->limit($count)->get();
+            }
+        } else {
+            if ($user_id == 0) {
+                $consensus_forming = ConsensusForming::withCount('comments', 'likes')->with('comments', 'options') - orderBy('id', 'desc')->get();
+            } else {
 
-				$consensus_forming = ConsensusForming::withCount( 'comments', 'likes' )->with( 'comments', 'options' )->where( 'user_id', $user_id )->orderBy( 'id', 'desc' )->get();
-			}
-		}
+                $consensus_forming = ConsensusForming::withCount('comments', 'likes')->with('comments', 'options')->where('user_id', $user_id)->orderBy('id', 'desc')->get();
+            }
+        }
 
-		if ( $user_id != 0 ) {
-			$user = $this->get_user( $user_id );
+        if ($user_id != 0) {
+            $user = $this->get_user($user_id);
 
-			if(!is_null($user->latitude)) {
+            if (!is_null($user->latitude)) {
 
-				foreach ( $consensus_forming as $key => $farming ) {
-					$source = [
-						'lat' => $farming->latitude,
-						'lng' => $farming->longitude
-					];
+                foreach ($consensus_forming as $key => $farming) {
+                    $source = [
+                        'lat' => $farming->latitude,
+                        'lng' => $farming->longitude
+                    ];
 
-					$destination = [
-						'lat' => $user->latitude,
-						'lng' => $user->longitude
-					];
+                    $destination = [
+                        'lat' => $user->latitude,
+                        'lng' => $user->longitude
+                    ];
 
-					$mile = $this->calculate_distance( $source, $destination );
-					
-					if ( $mile > 30 ) {
-						unset( $consensus_forming[ $key ] );
-					}
-				}
-			}
-		}
+                    $mile = $this->calculate_distance($source, $destination);
+
+                    if ($mile > 30) {
+                        unset($consensus_forming[$key]);
+                    }
+                }
+            }
+        }
 
 
 
-		return response()->json( $consensus_forming );
-	}
+        return response()->json($consensus_forming);
+    }
 
     public function save(Request $request)
     {
@@ -310,4 +310,41 @@ class ConsensusFormingController extends Controller
 
         return true;
     }
+
+    public function get_user($id)
+    {
+        $curl = curl_init();
+
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => 'https://rrci.staging.rarare.com/user/' . $id,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'GET',
+        ));
+
+        $response = curl_exec($curl);
+
+        curl_close($curl);
+        return json_decode($response);
+    }
+
+    function calculate_distance($source, $destination)
+    {
+        $lat1  = floatval($source['lat']);
+        $lon1  = floatval($source['lng']);
+        $lat2  = floatval($destination['lat']);
+        $lon2  = floatval($destination['lng']);
+        $theta = $lon1 - $lon2;
+        $dist  = sin(deg2rad($lat1)) * sin(deg2rad($lat2)) + cos(deg2rad($lat1)) * cos(deg2rad($lat2)) * cos(deg2rad($theta));
+        $dist  = acos($dist);
+        $dist  = rad2deg($dist);
+        $miles = $dist * 60 * 1.1515;
+
+        return $miles;
+    }
+
 }
