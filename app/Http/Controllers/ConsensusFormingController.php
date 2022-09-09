@@ -17,16 +17,16 @@ class ConsensusFormingController extends Controller
     {
         if ($count != 0) {
             if ($user_id == 0) {
-                $consensus_forming = ConsensusForming::withCount('comments', 'likes')->with('comments', 'options')->limit($count)->get();
+                $consensus_forming = ConsensusForming::withCount('comments', 'likes')->with('comments', 'options')->orderBy('id','desc')->limit($count)->get();
             } else {
-                $consensus_forming = ConsensusForming::withCount('comments', 'likes')->with('comments', 'options')->where('user_id', $user_id)->limit($count)->get();
+                $consensus_forming = ConsensusForming::withCount('comments', 'likes')->with('comments', 'options')->where('user_id', $user_id)->orderBy('id','desc')->limit($count)->get();
             }
         }
         else{
             if ($user_id == 0) {
-                $consensus_forming = ConsensusForming::withCount('comments', 'likes')->with('comments', 'options')->get();
+                $consensus_forming = ConsensusForming::withCount('comments', 'likes')->with('comments', 'options')-orderBy('id','desc')->get();
             } else {
-                $consensus_forming = ConsensusForming::withCount('comments', 'likes')->with('comments', 'options')->where('user_id', $user_id)->get();
+                $consensus_forming = ConsensusForming::withCount('comments', 'likes')->with('comments', 'options')->where('user_id', $user_id)->orderBy('id','desc')->get();
             }
         }
 
