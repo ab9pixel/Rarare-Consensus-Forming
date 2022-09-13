@@ -93,4 +93,20 @@ class ConsensusForming extends Model
 
         return $option_array;
     }
+
+    public function getStatusAttribute(){
+	    $start = gmdate('Y-m-d H:i:s', strtotime("$this->start_date $this->start_time"));
+	    $end = gmdate('Y-m-d H:i:s', strtotime("$this->end_date $this->end_time"));
+	    $now=date("Y-m-d H:i:s");
+
+	    if($start > $now && $end < $now){
+	    	return 1;
+	    }
+
+	    if($start < $now){
+	    	return 0;
+	    }
+
+	    return 2;
+    }
 }
