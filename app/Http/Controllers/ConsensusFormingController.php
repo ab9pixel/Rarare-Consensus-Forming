@@ -103,6 +103,7 @@ class ConsensusFormingController extends Controller
         $consensus_forming->end_time = $request->end_time;
         $consensus_forming->participation = $request->participation;
         $consensus_forming->vote_question = $request->vote_question;
+	    $consensus_forming->timezone = $request->timezone;
         $consensus_forming->user_id = $request->user_id;
         if ($consensus_forming->save()) {
             if (!isset($request->id)) {

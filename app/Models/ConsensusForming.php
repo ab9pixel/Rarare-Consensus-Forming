@@ -95,9 +95,21 @@ class ConsensusForming extends Model
     }
 
     public function getStatusAttribute(){
-	    $start = gmdate('Y-m-d H:i:s', strtotime("$this->start_date $this->start_time"));
-	    $end = gmdate('Y-m-d H:i:s', strtotime("$this->end_date $this->end_time"));
-	    $now=date("Y-m-d H:i:s");
+	    $time = gmmktime();
+	    $now= date("Y-m-d h:i A", $time);
+
+	    $string_start = $this->start_date." ".$this->start_time;
+	    $start_dt = new \DateTime($string_start,new \DateTimeZone("Asia/Karachi"));
+
+	    $start_dt->setTimezone(new \DateTimeZone('UTC'));
+	    $start=$start_dt->format('Y-m-d h:i A');
+
+
+	    $string_end = $this->end_date." ".$this->end_time;
+	    $end_dt = new \DateTime($string_end,new \DateTimeZone("Asia/Karachi"));
+
+	    $end_dt->setTimezone(new \DateTimeZone('UTC'));
+	    $end=$end_dt->format('Y-m-d h:i A');
 
 	    if($start > $now && $end < $now){
 	    	return 1;
