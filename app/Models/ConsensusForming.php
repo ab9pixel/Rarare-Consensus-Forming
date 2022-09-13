@@ -99,14 +99,14 @@ class ConsensusForming extends Model
 	    $now= date("Y-m-d h:i A", $time);
 
 	    $string_start = $this->start_date." ".$this->start_time;
-	    $start_dt = new \DateTime($string_start,new \DateTimeZone("Asia/Karachi"));
+	    $start_dt = new \DateTime($string_start,new \DateTimeZone($this->timezone));
 
 	    $start_dt->setTimezone(new \DateTimeZone('UTC'));
 	    $start=$start_dt->format('Y-m-d h:i A');
 
 
 	    $string_end = $this->end_date." ".$this->end_time;
-	    $end_dt = new \DateTime($string_end,new \DateTimeZone("Asia/Karachi"));
+	    $end_dt = new \DateTime($string_end,new \DateTimeZone($this->timezone));
 
 	    $end_dt->setTimezone(new \DateTimeZone('UTC'));
 	    $end=$end_dt->format('Y-m-d h:i A');
