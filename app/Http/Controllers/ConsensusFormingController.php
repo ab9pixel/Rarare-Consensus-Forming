@@ -17,15 +17,15 @@ class ConsensusFormingController extends Controller
     {
         if ($count != 0) {
             if ($type == "l") {
-                $consensus_forming = ConsensusForming::withCount('comments', 'likes')->with('comments', 'options')->orderBy('created_at', 'desc')->limit($count)->get();
+                $consensus_forming = ConsensusForming::withCount('comments', 'likes')->with('comments', 'options')->orderBy('status', 'desc')->orderBy('created_at', 'desc')->limit($count)->get();
             } else {
-                $consensus_forming = ConsensusForming::withCount('comments', 'likes')->with('comments', 'options')->where('user_id', $user_id)->orderBy('created_at', 'desc')->limit($count)->get();
+                $consensus_forming = ConsensusForming::withCount('comments', 'likes')->with('comments', 'options')->where('user_id', $user_id)->orderBy('status', 'desc')->orderBy('created_at', 'desc')->limit($count)->get();
             }
         } else {
             if ($type == "l") {
-                $consensus_forming = ConsensusForming::withCount('comments', 'likes')->with('comments', 'options')->orderBy('created_at', 'desc')->get();
+                $consensus_forming = ConsensusForming::withCount('comments', 'likes')->with('comments', 'options')->orderBy('status', 'desc')->orderBy('created_at', 'desc')->get();
             } else {
-                $consensus_forming = ConsensusForming::withCount('comments', 'likes')->with('comments', 'options')->where('user_id', $user_id)->orderBy('created_at', 'desc')->get();
+                $consensus_forming = ConsensusForming::withCount('comments', 'likes')->with('comments', 'options')->where('user_id', $user_id)->orderBy('status', 'desc')->orderBy('created_at', 'desc')->get();
             }
         }
         $data = [];
