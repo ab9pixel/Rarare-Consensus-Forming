@@ -111,11 +111,11 @@ class ConsensusForming extends Model
 	    $end_dt->setTimezone(new \DateTimeZone('UTC'));
 	    $end=$end_dt->format('Y-m-d h:i A');
 
-	    if($start > $now && $end < $now){
+	    if($start < $now && $end > $now){
 	    	return 1;
 	    }
 
-	    if($start < $now){
+	    if($start > $now){
 	    	return 0;
 	    }
 
