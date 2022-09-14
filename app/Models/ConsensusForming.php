@@ -11,7 +11,7 @@ class ConsensusForming extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    protected $appends = ['liked_users','user','exist_users','marked_option','type','progress','total_record'];
+    protected $appends = ['status','liked_users','user','exist_users','marked_option','type','progress','total_record'];
 
     public function comments()
     {
@@ -112,13 +112,13 @@ class ConsensusForming extends Model
 	    $end=$end_dt->format('Y-m-d h:i A');
 
 	    if($start < $now && $end > $now){
-	    	return 1;
+	    	return "Ongoing";
 	    }
 
 	    if($start > $now){
-	    	return 0;
+	    	return "Pending";
 	    }
 
-	    return 2;
+	    return "Past";
     }
 }
