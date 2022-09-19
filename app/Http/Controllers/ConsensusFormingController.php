@@ -154,6 +154,7 @@ class ConsensusFormingController extends Controller
 
         if ($consensus_forming->participation == 1) {
             $post['user_id'] = $consensus_forming->user_id;
+            $post['object_id'] = $consensus_forming->id;
             $post['action'] = "Commented";
             $post['type'] = "Consensus Forming";
             $post['vote_question'] = $consensus_forming->vote_question;
@@ -200,6 +201,7 @@ class ConsensusFormingController extends Controller
 
         if ($consensus_forming->participation == 1) {
             $post['user_id'] = $consensus_forming->user_id;
+            $post['object_id'] = $consensus_forming->id;
             $post['action'] = "Liked";
             $post['type'] = "Consensus Forming";
             $post['vote_question'] = $consensus_forming->vote_question;
@@ -252,6 +254,7 @@ class ConsensusFormingController extends Controller
         $consensus_forming = ConsensusForming::find($request->parent_id);
         if ($consensus_forming->participation == 1) {
             $post['user_id'] = $consensus_forming->user_id;
+            $post['object_id'] = $consensus_forming->id;
             $post['action'] = "Voted";
             $post['type'] = "Consensus Forming";
             $post['vote_question'] = $consensus_forming->vote_question;
@@ -299,6 +302,7 @@ class ConsensusFormingController extends Controller
                 'action' => $post['action'],
                 'url' => $post['url'],
                 'user_id' => $post['user_id'],
+                'object_id' => $post['object_id'],
                 'sender_id' => $post['sender_id']
             ),
         ));
