@@ -114,16 +114,21 @@ class ConsensusForming extends Model
         $end = $end_dt->format('Y-m-d h:i A');
 
         if ($start < $now && $end > $now) {
-            DB::update("update consensus_formings set status=1 where id=$id");
+            $status = Eloquent::find($id);
+            $status->status = '1';
+            $status->update();
             return "In Progress";
         }
 
         if ($start > $now) {
-            DB::update("update consensus_formings set status=0 where id=$id");
+            $status = Eloquent::find($id);
+            $status->status = '0';
+            $status->update();
             return "Pending";
         }
-
-        DB::update("update consensus_formings set status=2 where id=$id");
-        return "Completed";
+            $status = Eloquent::find($id);
+            $status->status = '2';
+            $status->update();
+            return "Completed";
     }
 }
