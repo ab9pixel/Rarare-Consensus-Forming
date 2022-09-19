@@ -112,13 +112,13 @@ class ConsensusForming extends Model
 	    $end=$end_dt->format('Y-m-d h:i A');
 
 	    if($start < $now && $end > $now){
-	    	return "In Progress";
+	    	return 1;
 	    }
 
 	    if($start > $now){
-	    	return "Pending";
+	    	return 0;
 	    }
 
-	    return "Completed";
+	    return 2;
     }
 }
