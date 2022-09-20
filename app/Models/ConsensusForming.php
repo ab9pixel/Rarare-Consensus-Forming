@@ -11,7 +11,7 @@ class ConsensusForming extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    protected $appends = ['liked_users', 'user', 'exist_users', 'marked_option', 'type', 'progress', 'total_record'];
+    protected $appends = ['status','liked_users', 'user', 'exist_users', 'marked_option', 'type', 'progress', 'total_record'];
 
     public function comments()
     {
