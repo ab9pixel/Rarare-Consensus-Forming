@@ -17,7 +17,7 @@ class ConsensusFormingController extends Controller
     {
 
         if ( $count != 0 ) {
-            if ( $type == "l") {s
+            if ( $type == "l") {
                 if ( $user_id != 0) {
 
                     $consensus_forming = ConsensusForming::withCount( 'comments', 'likes' )->with( 'comments', 'options' )->where( 'user_id', $user_id )->orderBy( 'status', 'desc' )->orderBy( 'created_at', 'desc' )->limit( $count )->get();
