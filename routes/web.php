@@ -24,6 +24,7 @@ $router->group(['prefix'=>'api'],function() use ($router){
     $router->get('delete/{id}','ConsensusFormingController@delete');
 
     $router->post('/save','ConsensusFormingController@save');
+    $router->post('/search','ConsensusFormingController@search');
     $router->post('/like','ConsensusFormingController@like');
     $router->post('/comment','ConsensusFormingController@comment');
     $router->post('/user/option','ConsensusFormingController@user_option');

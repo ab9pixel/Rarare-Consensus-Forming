@@ -76,6 +76,51 @@ class ConsensusFormingController extends Controller
 
     }
 
+    public function search( Request $request )
+    {
+        $title = $request->title;
+        $lat = $request->latitude;
+        $lng = $request->longitude;
+
+
+            $consensus_forming = ConsensusForming::where('title', 'like', '%' . $title . '%')->orderBy( 'status', 'desc' )->orderBy( 'created_at', 'desc' )->get();
+
+//            dd($consensus_forming[items]);
+            if ( ! $consensus_forming->isEmpty() ) {
+
+
+                foreach ( $consensus_forming as $key => $forming ) {
+
+                    $source = [
+                        'lat' => $forming->latitude,
+                        'lng' => $forming->longitude
+                    ];
+
+                    $destination = [
+                        'lat' => $lat,
+                        'lng' => $lng
+                    ];
+
+                    $mile = $this->calculate_distance( $source, $destination );
+
+                    if ( $mile > 30 ) {
+                        $consensus_forming->forget( $key );
+                        $data = []  ;
+                    } else {
+                        $data[] = $forming;
+                    }
+                }
+
+            }else{
+                $data = []  ;
+            }
+
+
+
+        return response()->json($data);
+
+    }
+
     public function save( Request $request )
     {
         $validator = Validator::make( $request->all(), [
