@@ -88,7 +88,7 @@ class ConsensusFormingController extends Controller
         $lng = $request->longitude;
 
 
-            $consensus_forming = ConsensusForming::where('title', 'like', '%' . $title . '%')->orderBy( 'status', 'desc' )->orderBy( 'created_at', 'desc' )->get();
+            $consensus_forming = ConsensusForming::where('title', 'ilike', '%' . $title . '%')->orderBy( 'status', 'desc' )->orderBy( 'created_at', 'desc' )->get();
 
 //            dd($consensus_forming[items]);
             if ( ! $consensus_forming->isEmpty() ) {
@@ -128,6 +128,7 @@ class ConsensusFormingController extends Controller
 
     public function save( Request $request )
     {
+//        dd($request);
         $validator = Validator::make( $request->all(), [
             'title'         => 'required|max:255',
             'description'   => 'required',
@@ -137,8 +138,8 @@ class ConsensusFormingController extends Controller
             'audience'      => 'required',
             'start_date'    => 'required|date',
             'end_date'      => 'required|date',
-            'start_time'    => 'required|date_format:H:i',
-            'end_time'      => 'required|date_format:H:i|after:start_time',
+            'start_time'    => 'required',
+            'end_time'      => 'required',
             'user_id'       => 'required',
             'participation' => 'required',
             'vote_question' => 'required',
@@ -157,7 +158,6 @@ class ConsensusFormingController extends Controller
         } else {
             $consensus_forming = new ConsensusForming;
         }
-
         $consensus_forming->title         = $request->title;
         $consensus_forming->description   = $request->description;
         $consensus_forming->address       = $request->address;
