@@ -41,6 +41,7 @@ class ConsensusFormingController extends Controller
             $data = [];
             return response()->json($data);
         }
+        $data = array();
         if ( $type == "l" && $user_id != 0) {
 
             $user = $this->get_user( $user_id );
@@ -64,10 +65,10 @@ class ConsensusFormingController extends Controller
 
                     if ( $mile > 30 ) {
                         $consensus_forming->forget( $key );
-                        $data = $consensus_forming;
                     } else {
                         $data[] = $forming;
                     }
+
                 }
 
             }
@@ -76,7 +77,11 @@ class ConsensusFormingController extends Controller
 
             $data = $consensus_forming;
         }
+        if(count($data) > 0){
 
+        }else{
+            $data = [];
+        }
 
             return response()->json($data);
 
