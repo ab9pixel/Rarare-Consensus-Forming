@@ -13,13 +13,14 @@ use Illuminate\Support\Facades\Validator;
 class ConsensusFormingController extends Controller
 {
 
-    public function list( $count, $user_id, $type )
+    public function list( $count, $user_id, $type, $isHome )
     {
-
         if ( $count != 0 ) {
             if ( $type == "l") {
-                if ( $user_id != 0) {
-
+                if ( $user_id != 0 && $isHome == 1) {
+                    $consensus_forming = ConsensusForming::withCount( 'comments', 'likes' )->with( 'comments', 'options' )->where('status', '1')->where( 'user_id', $user_id )->orderBy( 'status', 'desc' )->orderBy( 'created_at', 'desc' )->limit( $count )->get();
+                }
+                else if ( $user_id != 0) {
                     $consensus_forming = ConsensusForming::withCount( 'comments', 'likes' )->with( 'comments', 'options' )->where( 'user_id', $user_id )->orderBy( 'status', 'desc' )->orderBy( 'created_at', 'desc' )->limit( $count )->get();
                 }else {
                     $consensus_forming = ConsensusForming::withCount('comments', 'likes')->with('comments', 'options')->where('status', '1')->orderBy('status', 'desc')->orderBy('created_at', 'desc')->limit($count)->get();
