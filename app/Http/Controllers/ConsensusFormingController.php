@@ -83,7 +83,7 @@ class ConsensusFormingController extends Controller
             $data = [];
         }
 
-            return response()->json($data);
+            return response()->json(['msg' => 'success', 'data' => $data, 'count' => count($data)]);
 
     }
 
