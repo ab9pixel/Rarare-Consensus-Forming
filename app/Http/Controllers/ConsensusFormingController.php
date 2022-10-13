@@ -17,6 +17,13 @@ class ConsensusFormingController extends Controller
     {
         $consensus = ConsensusForming::withCount('comments', 'likes')->with('comments', 'options')->get();
 
+
+        if($user_id == '0' && $type == 'l' && $isHome == '1'){
+            $consensuss = ConsensusForming::withCount('comments', 'likes')->with('comments', 'options')->where('status', '1')->orderBy( 'created_at', 'desc' )->limit($count)->get();
+//            $consensuss = ConsensusForming::withCount('comments', 'likes')->with('comments', 'options')->orderBy( 'created_at', 'desc' )->orderByRaw('CASE WHEN status = 1 THEN 1 WHEN status = 0 THEN 2 WHEN status = 2 THEN 3 END')->limit($count)->get();
+//            dd($consensuss);
+            return response()->json(['msg' => 'success', 'data' => $consensuss, 'count' => count($consensuss)]);
+        }
         $user = $this->get_user($user_id);
         $result = array();
         if (!is_null($user->latitude) && !is_null($user->longitude)) {
@@ -56,22 +63,22 @@ class ConsensusFormingController extends Controller
         if ( $count != 0 ) {
             if ( $type == "l") {
                 if ( $user_id != 0 && $isHome == 1) {
-                    $consensus_forming = ConsensusForming::withCount( 'comments', 'likes' )->with( 'comments', 'options' )->where('status', '1')->where( 'user_id', $user_id )->whereIn('id', $result)->orderBy( 'status', 'desc' )->orderBy( 'created_at', 'desc' )->limit( $count )->get();
+                    $consensus_forming = ConsensusForming::withCount( 'comments', 'likes' )->with( 'comments', 'options' )->where('status', '1')->where( 'user_id', $user_id )->whereIn('id', $result)->orderBy( 'status', 'asc' )->orderBy( 'created_at', 'desc' )->limit( $count )->get();
                 }
                 else if ( $user_id != 0) {
-                    $consensus_forming = ConsensusForming::withCount( 'comments', 'likes' )->with( 'comments', 'options' )->where( 'user_id', $user_id )->whereIn('id', $result)->orderBy( 'status', 'desc' )->orderBy( 'created_at', 'desc' )->limit( $count )->get();
+                    $consensus_forming = ConsensusForming::withCount( 'comments', 'likes' )->with( 'comments', 'options' )->where( 'user_id', $user_id )->whereIn('id', $result)->orderBy( 'created_at', 'desc' )->orderByRaw('CASE WHEN status = 1 THEN 1 WHEN status = 0 THEN 2 WHEN status = 2 THEN 3 END')->limit( $count )->get();
                 }else {
-                    $consensus_forming = ConsensusForming::withCount('comments', 'likes')->with('comments', 'options')->where('status', '1')->orderBy('status', 'desc')->orderBy('created_at', 'desc')->limit($count)->get();
+                    $consensus_forming = ConsensusForming::withCount('comments', 'likes')->with('comments', 'options')->where('status', '1')->orderBy('status', 'asc')->orderBy('created_at', 'desc')->limit($count)->get();
                 }
                 } else {
-                    $consensus_forming = ConsensusForming::withCount( 'comments', 'likes' )->with( 'comments', 'options' )->where( 'user_id', $user_id )->orderBy( 'status', 'desc' )->orderBy( 'created_at', 'desc' )->limit( $count )->get();
+                    $consensus_forming = ConsensusForming::withCount( 'comments', 'likes' )->with( 'comments', 'options' )->where( 'user_id', $user_id )->orderBy( 'created_at', 'desc' )->orderByRaw('CASE WHEN status = 1 THEN 1 WHEN status = 0 THEN 2 WHEN status = 2 THEN 3 END')->limit( $count )->get();
             }
         } else {
             if ( $type == "l" ) {
-                $consensus_forming = ConsensusForming::withCount( 'comments', 'likes' )->with( 'comments', 'options' )->where( 'status', '1' )->whereIn('id', $result)->orderBy( 'status', 'desc' )->orderBy( 'created_at', 'desc' )->limit('10')->get();
+                $consensus_forming = ConsensusForming::withCount( 'comments', 'likes' )->with( 'comments', 'options' )->where( 'status', '1' )->whereIn('id', $result)->orderBy( 'status', 'asc' )->orderBy( 'created_at', 'desc' )->limit('10')->get();
 
             } else {
-                $consensus_forming = ConsensusForming::withCount( 'comments', 'likes' )->with( 'comments', 'options' )->where( 'user_id', $user_id )->orderBy( 'status', 'desc' )->orderBy( 'created_at', 'desc' )->get();
+                $consensus_forming = ConsensusForming::withCount( 'comments', 'likes' )->with( 'comments', 'options' )->where( 'user_id', $user_id )->orderBy( 'created_at', 'desc' )->orderByRaw('CASE WHEN status = 1 THEN 1 WHEN status = 0 THEN 2 WHEN status = 2 THEN 3 END')->get();
             }
         }
 
