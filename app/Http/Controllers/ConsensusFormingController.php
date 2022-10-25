@@ -23,6 +23,9 @@ class ConsensusFormingController extends Controller
 //            $consensuss = ConsensusForming::withCount('comments', 'likes')->with('comments', 'options')->orderBy( 'created_at', 'desc' )->orderByRaw('CASE WHEN status = 1 THEN 1 WHEN status = 0 THEN 2 WHEN status = 2 THEN 3 END')->limit($count)->get();
 //            dd($consensuss);
             return response()->json(['msg' => 'success', 'data' => $consensuss, 'count' => count($consensuss)]);
+        }elseif($user_id == '0' && $type == 'l' && $count != 0){
+            $consensuss = ConsensusForming::withCount('comments', 'likes')->with('comments', 'options')->orderBy( 'created_at', 'desc' )->limit($count)->get();
+            return response()->json(['msg' => 'success', 'data' => $consensuss, 'count' => count($consensuss)]);
         }
         $user = $this->get_user($user_id);
         $result = array();
