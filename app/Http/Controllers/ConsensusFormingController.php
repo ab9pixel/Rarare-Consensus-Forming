@@ -236,7 +236,7 @@ class ConsensusFormingController extends Controller
             $post['type']          = "Consensus Forming";
             $post['vote_question'] = $consensus_forming->vote_question;
             $post['message']       = $consensus_forming->description;
-            $post['url']           = "https://staging.rarare.com/proposal?id=" . $request->parent_id;
+            $post['url']           = "https://rarare.com/proposal?id=" . $request->parent_id;
             $post['title']         = $consensus_forming->title;
             $post['sender_id']     = $request->user_id;
             $this->send_notification( $post );
@@ -284,7 +284,7 @@ class ConsensusFormingController extends Controller
             $post['type']          = "Consensus Forming";
             $post['vote_question'] = $consensus_forming->vote_question;
             $post['message']       = $consensus_forming->description;
-            $post['url']           = "https://staging.rarare.com/proposal?id=" . $request->parent_id;
+            $post['url']           = "https://rarare.com/proposal?id=" . $request->parent_id;
             $post['title']         = $consensus_forming->title;
             $post['sender_id']     = $request->user_id;
             $this->send_notification( $post );
@@ -338,7 +338,7 @@ class ConsensusFormingController extends Controller
             $post['type']          = "Consensus Forming";
             $post['vote_question'] = $consensus_forming->vote_question;
             $post['message']       = $consensus_forming->description;
-            $post['url']           = "https://staging.rarare.com/proposal?id=" . $request->parent_id;
+            $post['url']           = "https://rarare.com/proposal?id=" . $request->parent_id;
             $post['title']         = $consensus_forming->title;
             $post['sender_id']     = $request->user_id;
             $this->send_notification( $post );
@@ -366,7 +366,7 @@ class ConsensusFormingController extends Controller
         $curl = curl_init();
 
         curl_setopt_array( $curl, array(
-            CURLOPT_URL            => 'https://rrci.staging.rarare.com/proposal/subscribe/email',
+            CURLOPT_URL            => 'https://rrci.rarare.com/proposal/subscribe/email',
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING       => '',
             CURLOPT_MAXREDIRS      => 10,
@@ -399,7 +399,7 @@ class ConsensusFormingController extends Controller
         $curl = curl_init();
 
         curl_setopt_array( $curl, array(
-            CURLOPT_URL            => 'https://rrci.staging.rarare.com/user/' . $id,
+            CURLOPT_URL            => 'https://rrci.rarare.com/user/' . $id,
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING       => '',
             CURLOPT_MAXREDIRS      => 10,
